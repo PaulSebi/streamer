@@ -1,0 +1,58 @@
+
+    <div class = "row" style="margin-right : 0; ">
+        <div class = "col l4" style = "padding-right : 0">
+          <h2 class = "header" style ="text-align: center">Queue</h2>
+          <div id= "queue" class = "container" style = "overflow-y:scroll; overflow-x: hidden; max-height :85vh">
+
+          </div>
+        </div>
+
+        <!-- Right side of window -->
+        <div class = "col l8" style = "padding-right:0; padding-left :0">
+          <div class = "boxtr section">
+
+            <div class="fixed-action-btn horizontal click-to-toggle">
+              <a class="btn-floating btn-large">
+                <i class="material-icons white" style ="color: #32292f">account_circle</i>
+              </a>
+              <ul>
+                <li><a class="btn-floating btn-large white" style ="color: #32292f"><%= roomName%></a></li>
+                <li><a class="btn-floating white"><i class="material-icons" style ="color: #32292f">settings</i></a></li>
+                <li><a class="btn-floating white"><i class="material-icons" style ="color: #32292f">save</i></a></li>
+                <li><a id = "logout" class="btn-floating white"><i class="material-icons" style ="color: #32292f">power_settings_new</i></a></li>
+              </ul>
+            </div>
+            <div class="video-container" style = "padding-bottom: 45vh">
+                <iframe id="videoplayer" height="80vh" width="40vh" src="https://www.youtube.com/embed/GRWMkUUlNuc?enablejsapi=1&controls=0&autoplay=1" frameborder="0">
+                </iframe>
+                <div class = "row valign wrapper">
+                      <!-- <div class = "col l2"></div> -->
+                      <div class = "col l4 center-align">
+                          <a class="waves-effect waves-light"><i class = "material-icons medium white-text">skip_previous</i></ a>
+                      </div>
+                      <div class = "col l4 center-align">
+                          <a class="waves-effect waves-light"><i class = "material-icons large white-text">play_circle_outline</i></a>
+                      </div>
+                      <div class = "col l4 center-align">
+                          <a class="waves-effect waves-light"><i class = "material-icons medium white-text">skip_next</i></a>
+                      </div>
+                  </div>
+                  <h3 class = "header white-text center-align">Can't Stop The Feeling</h3>
+            </div>
+            <!-- <div id= 'player' style = "padding-bottom:45vh"></div> -->
+
+
+
+
+          </div>
+          <div class = "divider"></div>
+          <div class = "section boxbr">
+              <div class = "input-field inline">
+                    <input id = "songurl" placeholder="enter song url to add">
+                    &nbsp;
+                    <a id = "songsubmit" class="waves-effect waves-dark"><i class="material-icons medium" style ="color: #32292f">keyboard_arrow_right</i></a>
+              </div>
+          </div>
+        </div>
+    </div>
+    <script src="http://www.youtube.com/iframe_api"></script>

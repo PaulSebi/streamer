@@ -1,0 +1,32 @@
+.container{
+  margin : 0 auto;
+  width : 100%;
+  max-width: 100vw;
+}
+
+.boxtr{
+  width : 100%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  /*min-height : 30vh;*/
+}
+
+.boxbr{
+  width : 100%;
+  min-height : 30vh;
+  text-align: center;
+}
+
+.input-field{
+  padding : 10vh 0 0 0;
+}
+
+#songurl, #username{
+    width : 50vh;
+    font-size: 1.6em;
+}
+
+.qim{
+    height : 10vh;
+}

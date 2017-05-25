@@ -1,0 +1,22 @@
+{
+  "name": "streamers",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "ejs": "^2.3.4",
+    "express": "",
+    "express-ejs-layouts": "^2.3.0",
+    "fs": "",
+    "jsonwebtoken": "^7.4.1",
+    "lodash": "^4.17.4",
+    "mongoose": "",
+    "socket.io": ""
+  },
+  "author": "PaulSebi",
+  "license": "ISC"
+}

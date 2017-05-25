@@ -1,0 +1,56 @@
+<div class = "container">
+    <div class = "row" style="margin-right : 0; ">
+        <div class = "col l4" style = "padding-right : 0">
+
+          <!--  Left Side of window -->
+
+          <h2 class = "header" style ="text-align: center">Queue</h2>
+          <div id="queue" class = "container" style = "overflow-y:scroll; overflow-x: hidden; max-height :85vh">
+
+          </div>
+        </div>
+
+        <!-- Right side of window -->
+        <div class = "col l8" style = "padding-right:0; padding-left :0">
+          <div id = "bkdrop" class = "boxtr section" style ="
+                                                                                        background-repeat: no-repeat;
+                                                                                        background-size: cover;
+                                                                                        background-position: center;
+                                                                                        ">
+
+            <div class="fixed-action-btn horizontal click-to-toggle">
+              <a id = "logout" class="btn-floating btn-large">
+                <i class="material-icons white" style ="color: #32292f">power_settings_new</i>
+              </a>
+            </div>
+            <div class="video-container" style = "padding-bottom: 45vh">
+                <iframe height="315" hidden src="https://www.youtube.com/embed/RBumgq5yVrA?version=3&autoplay=0&controls=0" frameborder="0" allowfullscreen >
+                </iframe>
+            </div>
+            <div class = "row valign wrapper">
+                <!-- <div class = "col l2"></div> -->
+                <div class = "col l4 center-align">
+                    <a class="waves-effect waves-light"><i class = "material-icons medium white-text">skip_previous</i></ a>
+                </div>
+                <div class = "col l4 center-align">
+                    <a class="waves-effect waves-light"><i class = "material-icons large white-text">play_circle_outline</i></a>
+                </div>
+                <div class = "col l4 center-align">
+                    <a class="waves-effect waves-light"><i class = "material-icons medium white-text">skip_next</i></a>
+                </div>
+            </div>
+            <h3 id = "songName" class = "header white-text center-align">Can't Stop The Feeling</h3>
+
+
+          </div>
+          <div class = "divider"></div>
+          <div class = "section boxbr">
+              <div class = "input-field inline">
+                    <input id = "songurl" placeholder="enter song url to add">
+                    &nbsp;
+                    <a id = "songsubmit" class="waves-effect waves-dark"><i class="material-icons medium" style ="color: #32292f">keyboard_arrow_right</i></a>
+              </div>
+          </div>
+        </div>
+    </div>
+</div>
