@@ -19,7 +19,8 @@ app.use(bodyParser.json());
 //set global variables
 app.set('secretkey', 'secretss');
 app.locals.songs = [];
-app.locals.currentsong = 0;
+app.locals.currentsong = -1;
+app.locals.stuck = false;
 
 //views config
 app.set('view engine', 'ejs');
@@ -44,6 +45,8 @@ io.sockets.on('connection', function(socket){
       socket.on('return handshake', function(data){
           console.log(data);
       });
+
+      // to subscribe to room from login page
       socket.on('subscribe', function(data){
           room = io.sockets.adapter.rooms[data.room];
           console.log('Room',room);
@@ -69,10 +72,13 @@ io.sockets.on('connection', function(socket){
           socket.emit('joined', data);
       });
 
+      // re-subscribe to the room after page redirect (this is a one-time thing)
       socket.on('subscribed', function(token){
           jwt.verify(token, app.get('secretkey'), function(err, decoded){
-              if(err)
-                res.json({success: false, message:'An error Occurred'});
+              if(err){
+                res.json({success: false, message:'An error Occurred at Subscribed'});
+                return;
+              }
               socket.join(decoded.data.room);
 
               var queue = [];
@@ -82,24 +88,40 @@ io.sockets.on('connection', function(socket){
                   if(song.playname == decoded.data.room)
                     queue.push(song);
               });
+              if(app.locals.songs.length > app.locals.currentsong+1)
+                console.log('New Join ', app.locals.songs[app.locals.currentsong]);
+              console.log("current ",(app.locals.songs.length > app.locals.currentsong+1) ? app.locals.songs[app.locals.currentsong] : "");
               var res = {
                   admin : decoded.data.admin,
-                  queue : queue
+                  queue : queue,
+                  current : (app.locals.songs.length > app.locals.currentsong) ? app.locals.songs[app.locals.currentsong] : ""
               }
               socket.emit('rejoined', res);
           });
       });
 
+      //new song is added by user or admin
       socket.on('addsong', function(data){
           jwt.verify(data.token, app.get('secretkey'), function(err, decoded){
               if(err)
-                res.json({success: false, message:'An error Occurred'});
+                res.json({success: false, message:'An error Occurred in addsong'});
 
-              var queue = [];
+              var queue = [], exist_flag = 0;
               getSongData(data.songurl, decoded.data, function(songData){
+                _.each(app.locals.songs, function(song){
+                    if(song.link == songData.link)
+                        exist_flag = 1;
+                });
+                if(exist_flag){
+                  socket.emit('error', 'Song Already Exists');
+                  return;
+                }
                 app.locals.songs.push(songData);
                 queue.push(songData);
+                console.log("Stuck ", app.locals.stuck);
                 io.to(decoded.data.room).emit('songadded', queue);
+                if(app.locals.stuck == true)  //reload after a gap in the song queue
+                    io.to(decoded.data.room).emit('nextSong', app.locals.songs[app.locals.currentsong++]);
               });
           });
 
@@ -109,16 +131,26 @@ io.sockets.on('connection', function(socket){
           //next song in the list
           jwt.verify(token, app.get('secretkey'), function(err, decoded){
               if(err)
-                res.json({success: false, message:'An error Occurred'});
-
+                console.log({success: false, message:'An error Occurred in Next'});
               console.log('Requesting next song', app.locals.songs, app.locals.songs[app.locals.currentsong]);
-              if(app.locals.songs.length != 0 && app.locals.songs.length > app.locals.currentsong){
+              if(app.locals.songs.length > app.locals.currentsong+1){
+                  app.locals.currentsong++;
+                  console.log('Current',  app.locals.currentsong,app.locals.songs[app.locals.currentsong]);
                   io.to(decoded.data.room).emit('nextSong', app.locals.songs[app.locals.currentsong]);
-                  if(decoded.admin)
-                    app.locals.currentsong++;
+                  app.locals.stuck = false;
               }
+              else app.locals.stuck = true;
           });
 
+      });
+
+      socket.on('songControl', function(payload, token){
+        jwt.verify(token, app.get('secretkey'), function(err, decoded){
+            if(err)
+              console.log({success: false, message:'An error Occurred in SongControl'});
+            console.log('Requesting '+payload);
+            io.to(decoded.data.room).emit('songControl', payload)
+        });
       });
 });
 

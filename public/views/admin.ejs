@@ -18,26 +18,29 @@
               <ul>
                 <li><a class="btn-floating btn-large white" style ="color: #32292f"><%= roomName%></a></li>
                 <li><a class="btn-floating white"><i class="material-icons" style ="color: #32292f">settings</i></a></li>
-                <li><a class="btn-floating white"><i class="material-icons" style ="color: #32292f">save</i></a></li>
+                <!-- <li><a class="btn-floating white"><i class="material-icons" style ="color: #32292f">save</i></a></li> -->
                 <li><a id = "logout" class="btn-floating white"><i class="material-icons" style ="color: #32292f">power_settings_new</i></a></li>
               </ul>
             </div>
             <div class="video-container" style = "padding-bottom: 45vh">
-                <iframe id="videoplayer" height="80vh" width="40vh" src="https://www.youtube.com/embed/GRWMkUUlNuc?enablejsapi=1&controls=0&autoplay=1" frameborder="0">
+                <iframe id="videoplayer" height="80vh" width="40vh"  src="https://www.youtube.com/embed/X1lDLG40Qgo?enablejsapi=1&autoplay=1&showinfo=0&controls=0" frameborder="0" style= "pointer-events : none;">
                 </iframe>
                 <div class = "row valign wrapper">
                       <!-- <div class = "col l2"></div> -->
                       <div class = "col l4 center-align">
-                          <a class="waves-effect waves-light"><i class = "material-icons medium white-text">skip_previous</i></ a>
+                          <a id = "prev_song" class="waves-effect waves-light"><i class = "material-icons medium white-text">skip_previous</i></a>
+                      </div>
+                      <div id = "play_div" class = "col l4 center-align" hidden>
+                          <a id = "play" class="waves-effect waves-light"><i class = "material-icons large white-text">play_circle_outline</i></a>
+                      </div>
+                      <div id = "pause_div" class = "col l4 center-align">
+                          <a id = "pause" class="waves-effect waves-light"><i class = "material-icons large white-text">pause_circle_outline</i></a>
                       </div>
                       <div class = "col l4 center-align">
-                          <a class="waves-effect waves-light"><i class = "material-icons large white-text">play_circle_outline</i></a>
-                      </div>
-                      <div class = "col l4 center-align">
-                          <a class="waves-effect waves-light"><i class = "material-icons medium white-text">skip_next</i></a>
+                          <a id = "next_song" class="waves-effect waves-light"><i class = "material-icons medium white-text">skip_next</i></a>
                       </div>
                   </div>
-                  <h3 class = "header white-text center-align">Can't Stop The Feeling</h3>
+                  <h3 class = "header white-text center-align"></h3>
             </div>
             <!-- <div id= 'player' style = "padding-bottom:45vh"></div> -->
 
