@@ -12,7 +12,8 @@ $(document).ready(function(){
             console.log('Received Current List');
               if(sessionStorage.accessAdmin == 'false'){
                 addSongToQ(data.queue);
-                if(data.current != "")
+                // console.log('Current', data.current);
+                if(data.current)
                   displayCurrentSong(data.current);
               }
           });
@@ -36,14 +37,19 @@ $(document).ready(function(){
           playsong();
         else if (data == 'pause')
           pausesong();
-    })
+    });
+
+    socket.on('errMessage', function(data){
+        window.alert(data);
+    });
 
     $('#namesubmit').click(resolveLogin);
     $('#songsubmit').click(addsong);
     $('#logout').click(logout);
-    $('#next_song').click(function(){socket.emit('next', sessionStorage.accessToken)});
+    $('#next_song').click(function(){socket.emit('next', sessionStorage.accessToken, 'clicked')});
     $('#play').click(function(){socket.emit('songControl', 'play', sessionStorage.accessToken);});
     $('#pause').click(function(){socket.emit('songControl', 'pause', sessionStorage.accessToken);});
+    $('#prev_song').click(function(){socket.emit('prev', sessionStorage.accessToken)});
 
 });
 

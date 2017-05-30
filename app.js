@@ -43,13 +43,13 @@ console.log("Listening at ", port);
 io.sockets.on('connection', function(socket){
       socket.emit('handshake','welcome');
       socket.on('return handshake', function(data){
-          console.log(data);
+          // console.log(data);
       });
 
       // to subscribe to room from login page
       socket.on('subscribe', function(data){
           room = io.sockets.adapter.rooms[data.room];
-          console.log('Room',room);
+          // console.log('Room',room);
           var admin;
           admin = room ? false : true;
 
@@ -82,19 +82,19 @@ io.sockets.on('connection', function(socket){
               socket.join(decoded.data.room);
 
               var queue = [];
-              console.log('Songs :');
+              // console.log('Songs :');
               _.forEach(app.locals.songs, function(song){
-                  console.log(song);
+                  // console.log(song);
                   if(song.playname == decoded.data.room)
                     queue.push(song);
               });
-              if(app.locals.songs.length > app.locals.currentsong+1)
-                console.log('New Join ', app.locals.songs[app.locals.currentsong]);
-              console.log("current ",(app.locals.songs.length > app.locals.currentsong+1) ? app.locals.songs[app.locals.currentsong] : "");
+              // if(app.locals.songs.length > app.locals.currentsong+1)
+              console.log('New Join ', app.locals.songs.length, app.locals.currentsong);
+              console.log("current ",(app.locals.songs.length > app.locals.currentsong+1) ? app.locals.songs[app.locals.currentsong+1] : null);
               var res = {
                   admin : decoded.data.admin,
                   queue : queue,
-                  current : (app.locals.songs.length > app.locals.currentsong) ? app.locals.songs[app.locals.currentsong] : ""
+                  current : (app.locals.songs.length >= app.locals.currentsong) ? app.locals.songs[app.locals.currentsong] : " "
               }
               socket.emit('rejoined', res);
           });
@@ -113,7 +113,7 @@ io.sockets.on('connection', function(socket){
                         exist_flag = 1;
                 });
                 if(exist_flag){
-                  socket.emit('error', 'Song Already Exists');
+                  socket.emit('errMessage', 'Song Already Exists');
                   return;
                 }
                 app.locals.songs.push(songData);
@@ -121,25 +121,53 @@ io.sockets.on('connection', function(socket){
                 console.log("Stuck ", app.locals.stuck);
                 io.to(decoded.data.room).emit('songadded', queue);
                 if(app.locals.stuck == true)  //reload after a gap in the song queue
-                    io.to(decoded.data.room).emit('nextSong', app.locals.songs[app.locals.currentsong++]);
+                {
+                  console.log("Next Song in Add", app.locals.currentsong, app.locals.songs.length);
+                  app.locals.currentsong++;
+                  io.to(decoded.data.room).emit('nextSong', app.locals.songs[app.locals.currentsong]);
+                }
               });
           });
 
       });
 
-      socket.on('next', function(token){
+      socket.on('next', function(token, clicked){
           //next song in the list
           jwt.verify(token, app.get('secretkey'), function(err, decoded){
               if(err)
                 console.log({success: false, message:'An error Occurred in Next'});
-              console.log('Requesting next song', app.locals.songs, app.locals.songs[app.locals.currentsong]);
+              console.log('Requesting next song', app.locals.currentsong, app.locals.songs.length);
               if(app.locals.songs.length > app.locals.currentsong+1){
                   app.locals.currentsong++;
-                  console.log('Current',  app.locals.currentsong,app.locals.songs[app.locals.currentsong]);
+                  // console.log('Current', app.locals.currentsong,app.locals.songs[app.locals.currentsong]);
                   io.to(decoded.data.room).emit('nextSong', app.locals.songs[app.locals.currentsong]);
                   app.locals.stuck = false;
               }
+              else if(clicked){
+                app.locals.stuck = false;
+                socket.emit('errMessage', 'No Song in Queue');
+              }
               else app.locals.stuck = true;
+              console.log('Stuck ', app.locals.stuck);
+          });
+
+      });
+
+      socket.on('prev', function(token){
+          //next song in the list
+          jwt.verify(token, app.get('secretkey'), function(err, decoded){
+              if(err)
+                console.log({success: false, message:'An error Occurred in Prev'});
+              console.log('Requesting prev song', app.locals.currentsong, app.locals.songs.length);
+              if(app.locals.songs.length > 0 && app.locals.currentsong > -1){
+                  app.locals.currentsong--;
+                  // console.log('Current', app.locals.currentsong,app.locals.songs[app.locals.currentsong]);
+                  io.to(decoded.data.room).emit('nextSong', app.locals.songs[app.locals.currentsong]);
+                  app.locals.stuck = false;
+              }
+              else if(clicked) app.locals.stuck = false;
+              else app.locals.stuck = true;
+              console.log('Stuck ', app.locals.stuck);
           });
 
       });
@@ -156,7 +184,7 @@ io.sockets.on('connection', function(socket){
 
 
 function getSongData(songurl, data, cb){
-    console.log('getSongData ', 'http://www.youtube.com/oembed?url='+songurl+'&format=json');
+    // console.log('getSongData ', 'http://www.youtube.com/oembed?url='+songurl+'&format=json');
     http.get('http://www.youtube.com/oembed?url='+songurl+'&format=json', function(res){
         var body = '';
         res.on("data", function(chunk) {
@@ -174,7 +202,7 @@ function getSongData(songurl, data, cb){
                 link : songurl,
                 username : data.name
             }
-            console.log('song data', data);
+            // console.log('song data', data);
             return cb(data);
         });
 
